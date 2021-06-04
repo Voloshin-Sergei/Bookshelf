@@ -24,7 +24,8 @@ const data = [
     year: '2017'
   },
 ]
-const app = document.querySelector('.container')
+const app = document.querySelector('#books-container');
+const addBtn = document.querySelector('.button_add')
 
 // render function
 const render = (data) => {
@@ -51,7 +52,43 @@ data.forEach(item => {
     `
   )
 });
-  
 }
+
+// add book function
+const addBook = (evt) => {
+  let title = 'Редактирование книги'
+
+  if(evt.target === addBtn) {
+    title = 'Добавить книгу'
+  }
+
+  app.innerHTML = '';
+  app.innerHTML =
+  `
+  <form class="book-form">
+  <h3 class="book-form__title">${title}</h3>
+  <div class="book-form__group">
+    <label for="title">Название</label>
+    <input class="book-form__input" type="text" id="title" placeholder="Введите название книги" required />
+  </div>
+  <div class="book-form__group">
+    <label for="author">Автор</label>
+    <input class="book-form__input" type="text" id="author" placeholder="Введите имя автора" required />
+  </div>
+  <div class="book-form__group">
+    <label for="year">Год издания</label>
+    <input class="book-form__input" type="number" id="year" placeholder="Введите год" max="2017" required />
+  </div>
+  <div class="book-form__group">
+    <label for="cover">Изображение</label>
+    <input class="book-form__input" type="text" id="cover" placeholder="Добавьте обложку книги" required />
+  </div>
+    <button class="button button_save" type="submit">Сохранить</button>
+    <button class="button button_cancel" type="button">Отменить</button>
+</form>
+  `
+}
+
+addBtn.addEventListener('click', addBook)
 
 render(data)
