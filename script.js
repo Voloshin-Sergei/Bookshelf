@@ -24,7 +24,7 @@ const data = [
     year: '2017',
   },
 ];
-const app = document.querySelector('#books-container');
+const app = document.getElementById('books-container');
 const addBtn = document.querySelector('.button_add');
 
 // render function
@@ -40,7 +40,7 @@ const render = () => {
       `
     <li class="item">
     <div class="item__cover">
-      <img src="${item.cover}" alt=${item.title} width="150" />
+      <img src="${item.cover}" alt="${item.title}" width="150" />
     </div>
     <div class="item__description">
       <p class="description__title">${item.title}</p>
@@ -60,17 +60,20 @@ const render = () => {
 // add new book function
 const addBook = () => {
   const newBook = {};
-  const titleBook = document.getElementById('title').value;
-  const authorBook = document.getElementById('author').value;
+  const titleBook = document.getElementById('title').value.trim();
+  const authorBook = document.getElementById('author').value.trim();
   const yearBook = document.getElementById('year').value;
-  const coverBook = document.getElementById('cover').value;
+  const coverBook = document.getElementById('cover').value.trim();
 
-  newBook.cover = coverBook;
-  newBook.title = titleBook;
-  newBook.author = authorBook;
-  newBook.year = yearBook;
+  if (coverBook && titleBook && authorBook && yearBook) {
+    newBook.cover = coverBook;
+    newBook.title = titleBook;
+    newBook.author = authorBook;
+    newBook.year = yearBook;
 
-  data.push(newBook);
+    data.push(newBook);
+  }
+
   render();
 };
 
@@ -102,7 +105,7 @@ const formForBook = (evt) => {
     <label for="cover">Изображение</label>
     <input class="book-form__input" type="text" id="cover" placeholder="Добавьте обложку книги" required />
   </div>
-    <button class="button button_save" type="button">Сохранить</button>
+    <button class="button button_save" type="submit">Сохранить</button>
     <button class="button button_cancel" type="button">Отменить</button>
 </form>
   `;
