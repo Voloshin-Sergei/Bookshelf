@@ -26,19 +26,19 @@ const data = [
 ];
 const app = document.getElementById('books-container');
 const addBtn = document.querySelector('.button_add');
+const bookList = document.createElement('ul');
 
 // render function
-const render = () => {
+function render() {
   app.innerHTML = '';
-
-  const bookList = document.createElement('ul');
+  bookList.innerHTML = '';
   bookList.classList.add('books-list');
   app.appendChild(bookList);
-  data.forEach((item) => {
+  data.forEach((item, index) => {
     bookList.insertAdjacentHTML(
       'beforeend',
       `
-    <li class="item">
+    <li class="item" data-item="${index}">
     <div class="item__cover">
       <img src="${item.cover}" alt="${item.title}" width="150" />
     </div>
@@ -55,24 +55,36 @@ const render = () => {
     `,
     );
   });
+}
+
+// remove book function
+const removeBook = (evt) => {
+  const { target } = evt;
+  const removeBtn = target.closest('.button_remove');
+
+  if (removeBtn) {
+    const index = removeBtn.parentNode.parentNode.getAttribute('data-item');
+    data.splice(index, 1);
+  }
+
+  render();
 };
 
 // add new book function
-const addBook = () => {
+const addBook = (evt) => {
+  evt.preventDefault();
   const newBook = {};
-  const titleBook = document.getElementById('title').value.trim();
-  const authorBook = document.getElementById('author').value.trim();
+  const titleBook = document.getElementById('title').value;
+  const authorBook = document.getElementById('author').value;
   const yearBook = document.getElementById('year').value;
-  const coverBook = document.getElementById('cover').value.trim();
+  const coverBook = document.getElementById('cover').value;
 
-  if (coverBook && titleBook && authorBook && yearBook) {
-    newBook.cover = coverBook;
-    newBook.title = titleBook;
-    newBook.author = authorBook;
-    newBook.year = yearBook;
+  newBook.cover = coverBook;
+  newBook.title = titleBook;
+  newBook.author = authorBook;
+  newBook.year = yearBook;
 
-    data.push(newBook);
-  }
+  data.push(newBook);
 
   render();
 };
@@ -87,7 +99,7 @@ const formForBook = (evt) => {
 
   app.innerHTML = '';
   app.innerHTML = `
-  <form class="book-form">
+  <form class="book-form" id="form" method="post">
   <h3 class="book-form__title">${title}</h3>
   <div class="book-form__group">
     <label for="title">Название</label>
@@ -113,10 +125,11 @@ const formForBook = (evt) => {
   const cancelBtn = app.querySelector('.button_cancel');
   cancelBtn.addEventListener('click', render);
 
-  const saveBtn = app.querySelector('.button_save');
-  saveBtn.addEventListener('click', addBook);
+  const saveBook = document.getElementById('form');
+  saveBook.addEventListener('submit', addBook);
 };
 
 addBtn.addEventListener('click', formForBook);
+bookList.addEventListener('click', removeBook);
 
 render();
