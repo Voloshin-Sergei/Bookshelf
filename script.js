@@ -58,21 +58,15 @@ function render() {
 }
 
 // remove book function
-const removeBook = (evt) => {
-  const { target } = evt;
-  const removeBtn = target.closest('.button_remove');
-
-  if (removeBtn) {
-    const index = removeBtn.parentNode.parentNode.getAttribute('data-item');
-    data.splice(index, 1);
-  }
-
+const removeBook = (index) => {
+  data.splice(index, 1);
   render();
 };
 
 // add new book function
 const addBook = (evt) => {
   evt.preventDefault();
+  console.log(evt);
   const newBook = {};
   const titleBook = document.getElementById('title').value;
   const authorBook = document.getElementById('author').value;
@@ -89,6 +83,26 @@ const addBook = (evt) => {
   render();
 };
 
+const edit = (evt) => {
+  const editBook = {};
+
+  const titleBook = document.getElementById('title');
+  const authorBook = document.getElementById('author');
+  const yearBook = document.getElementById('year');
+  const coverBook = document.getElementById('cover');
+
+  editBook.cover = coverBook.value;
+  editBook.title = titleBook.value;
+  editBook.author = authorBook.value;
+  editBook.year = yearBook.value;
+
+  data[evt] = editBook;
+
+  console.log(editBook);
+
+  render();
+};
+
 // render form for book card
 const formForBook = (evt) => {
   let title = 'Редактирование книги';
@@ -99,7 +113,7 @@ const formForBook = (evt) => {
 
   app.innerHTML = '';
   app.innerHTML = `
-  <form class="book-form" id="form" method="post">
+  <form class="book-form" id="form">
   <h3 class="book-form__title">${title}</h3>
   <div class="book-form__group">
     <label for="title">Название</label>
@@ -122,14 +136,55 @@ const formForBook = (evt) => {
 </form>
   `;
 
+  if (typeof evt === 'number') {
+    const editBook = {};
+
+    const titleBook = document.getElementById('title');
+    const authorBook = document.getElementById('author');
+    const yearBook = document.getElementById('year');
+    const coverBook = document.getElementById('cover');
+
+    coverBook.value = data[evt].cover;
+    titleBook.value = data[evt].title;
+    authorBook.value = data[evt].author;
+    yearBook.value = data[evt].year;
+
+    editBook.cover = coverBook.value;
+    editBook.title = titleBook.value;
+    editBook.author = authorBook.value;
+    editBook.year = yearBook.value;
+  }
+
   const cancelBtn = app.querySelector('.button_cancel');
   cancelBtn.addEventListener('click', render);
 
-  const saveBook = document.getElementById('form');
-  saveBook.addEventListener('submit', addBook);
+  const saveBook = document.querySelector('#form');
+  saveBook.addEventListener('submit', () => {
+    if (evt.target === addBtn) {
+      addBook(evt);
+    } else {
+      edit(evt);
+    }
+  });
+};
+
+// change book list function
+const changeBookList = (evt) => {
+  const { target } = evt;
+  const removeBtn = target.closest('.button_remove');
+  const editBtn = target.closest('.button_edit');
+  const index = target.parentNode.parentNode.getAttribute('data-item');
+
+  if (removeBtn) {
+    removeBook(index);
+  }
+
+  if (editBtn) {
+    formForBook(Number(index));
+  }
 };
 
 addBtn.addEventListener('click', formForBook);
-bookList.addEventListener('click', removeBook);
+bookList.addEventListener('click', changeBookList);
 
 render();
