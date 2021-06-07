@@ -64,42 +64,15 @@ const removeBook = (index) => {
 };
 
 // add new book function
-const addBook = (evt) => {
+const addBook = (evt, book) => {
   evt.preventDefault();
-  console.log(evt);
-  const newBook = {};
-  const titleBook = document.getElementById('title').value;
-  const authorBook = document.getElementById('author').value;
-  const yearBook = document.getElementById('year').value;
-  const coverBook = document.getElementById('cover').value;
-
-  newBook.cover = coverBook;
-  newBook.title = titleBook;
-  newBook.author = authorBook;
-  newBook.year = yearBook;
-
-  data.push(newBook);
-
+  data.push(book);
   render();
 };
 
-const edit = (evt) => {
-  const editBook = {};
-
-  const titleBook = document.getElementById('title');
-  const authorBook = document.getElementById('author');
-  const yearBook = document.getElementById('year');
-  const coverBook = document.getElementById('cover');
-
-  editBook.cover = coverBook.value;
-  editBook.title = titleBook.value;
-  editBook.author = authorBook.value;
-  editBook.year = yearBook.value;
-
-  data[evt] = editBook;
-
-  console.log(editBook);
-
+// edit book function
+const editBook = (evt, book) => {
+  data[evt] = book;
   render();
 };
 
@@ -136,23 +109,18 @@ const formForBook = (evt) => {
 </form>
   `;
 
+  const titleBook = document.getElementById('title');
+  const authorBook = document.getElementById('author');
+  const yearBook = document.getElementById('year');
+  const coverBook = document.getElementById('cover');
+
+  const book = {};
+
   if (typeof evt === 'number') {
-    const editBook = {};
-
-    const titleBook = document.getElementById('title');
-    const authorBook = document.getElementById('author');
-    const yearBook = document.getElementById('year');
-    const coverBook = document.getElementById('cover');
-
     coverBook.value = data[evt].cover;
     titleBook.value = data[evt].title;
     authorBook.value = data[evt].author;
     yearBook.value = data[evt].year;
-
-    editBook.cover = coverBook.value;
-    editBook.title = titleBook.value;
-    editBook.author = authorBook.value;
-    editBook.year = yearBook.value;
   }
 
   const cancelBtn = app.querySelector('.button_cancel');
@@ -160,10 +128,15 @@ const formForBook = (evt) => {
 
   const saveBook = document.querySelector('#form');
   saveBook.addEventListener('submit', () => {
+    book.cover = coverBook.value;
+    book.title = titleBook.value;
+    book.author = authorBook.value;
+    book.year = yearBook.value;
+
     if (evt.target === addBtn) {
-      addBook(evt);
+      addBook(evt, book);
     } else {
-      edit(evt);
+      editBook(evt, book);
     }
   });
 };
