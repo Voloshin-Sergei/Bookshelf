@@ -31,13 +31,17 @@ const bookList = document.createElement('ul');
 // render function
 function render() {
   app.innerHTML = '';
-  bookList.innerHTML = '';
-  bookList.classList.add('books-list');
-  app.appendChild(bookList);
-  data.forEach((item, index) => {
-    bookList.insertAdjacentHTML(
-      'beforeend',
-      `
+
+  if (data.length === 0) {
+    app.innerHTML = '<h3 class="title">Полка пуста. Добавьте книгу.</h3>';
+  } else {
+    bookList.innerHTML = '';
+    bookList.classList.add('books-list');
+    app.appendChild(bookList);
+    data.forEach((item, index) => {
+      bookList.insertAdjacentHTML(
+        'beforeend',
+        `
     <li class="item" data-item="${index}">
     <div class="item__cover">
       <img src="${item.cover}" alt="${item.title}" width="150" />
@@ -53,8 +57,9 @@ function render() {
     </div>
   </li>
     `,
-    );
-  });
+      );
+    });
+  }
 }
 
 // remove book function
