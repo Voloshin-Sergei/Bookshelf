@@ -81,6 +81,15 @@ const editBook = (evt, book) => {
   render();
 };
 
+// checking path for the book cover
+const checkPathCover = (value) => {
+  const pattern = new RegExp(/^(ftp|http|https):\/\/[^ "]+$/);
+  if (pattern.test(value)) {
+    return value;
+  }
+  return `assets/img/${value}`;
+};
+
 // render form for book card
 const formForBook = (evt) => {
   let title = 'Редактирование книги';
@@ -133,10 +142,10 @@ const formForBook = (evt) => {
 
   const saveBook = document.querySelector('#form');
   saveBook.addEventListener('submit', () => {
-    book.cover = coverBook.value;
     book.title = titleBook.value;
     book.author = authorBook.value;
     book.year = yearBook.value;
+    book.cover = checkPathCover(coverBook.value);
 
     if (evt.target === addBtn) {
       addBook(evt, book);
